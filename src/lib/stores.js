@@ -70,6 +70,10 @@ export const claimableRewardsCAP = writable({});
 export const totalSupplyCAP = writable(0);
 export const CAPStake = writable(0);
 
+// Pool transactions (deposits, withdrawals, pay ins, payouts) - for infinite scroll table
+export const poolTransactions = writable([]);
+export const lastPoolTransactionsCount = writable(0);
+
 // Pool performance stats (including fees)
 function getPoolPerformance(stats, latestIndex, oldestIndex) {
 	if (!stats) return;
