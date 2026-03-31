@@ -13,7 +13,7 @@
 	import { focusInput, hideModal } from '@lib/ui'
 	import LabelValue from '../layout/LabelValue.svelte'
 
-	let amount, isSubmitting, walletBalance = "0.0";
+	let amount, isSubmitting, isApproving, walletBalance = "0.0";
 
 	$: formattedWalletBalance = formatCAPForDisplay(walletBalance);
 
@@ -35,7 +35,17 @@
 	}
 
 	async function _approveAsset() {
-		const result = await approveAsset('CAP', 'FundStore');
+		isApproving = true;
+		try {
+			await approveAsset('CAP', 'FundStore');
+		} catch(e) {
+			// Swallow wallet user-denied errors — don't show error when user rejects/cancels
+			const msg = (e?.message || '').toLowerCase();
+			if (!msg.includes('user denied') && !msg.includes('user rejected')) {
+				console.error(e);
+			}
+		}
+		isApproving = false;
 	}
 
 	async function getBalance() {
@@ -75,7 +85,7 @@
 
 			<div>
 				{#if $allowances['CAP']?.['FundStore'] * 1 <= amount * 1}
-				<Button noSubmit={true} label={`Approve CAP`} on:click={_approveAsset} />
+				<Button noSubmit={true} isLoading={isApproving} label={`Approve CAP`} on:click={_approveAsset} />
 				{:else}
 				<Button isLoading={isSubmitting} label={`Stake`} />
 				{/if}
