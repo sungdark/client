@@ -69,6 +69,7 @@ export const poolWithdrawalFees = writable({});
 export const claimableRewardsCAP = writable({});
 export const totalSupplyCAP = writable(0);
 export const CAPStake = writable(0);
+export const referralDiscount = writable(0); // referral discount in bps
 
 // Pool performance stats (including fees)
 function getPoolPerformance(stats, latestIndex, oldestIndex) {
